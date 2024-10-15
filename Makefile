@@ -24,8 +24,8 @@ WHITE = \033[0;97m
 
 SRC_FILES	= main debugging
 
-SRC			= $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-OBJ			= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(OBJ_FILES)))
+SRC 		= 	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
+OBJ 		= 	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
 
 ###
 
@@ -34,8 +34,12 @@ OBJF		= .cache_exists
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-			@$(CC) $(CFLAGS) $(OBJ)
+			@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 			@echo "$(GREEN)$(NAME) compiled!$(DEF_COLOR)"
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJF)
+			@echo "$(YELLOW)Compiling: $< $(DEF_COLOR)"
+			@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJF):
 			@mkdir -p $(OBJ_DIR)

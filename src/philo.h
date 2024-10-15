@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 /*
   Struct s_params
@@ -22,9 +23,14 @@ typedef struct s_params
 
 typedef struct s_philo
 {
-    pthread_t t;
-    char *lf;
-    char *rf;
-    struct s_philo *lp;
-    struct s_philo *rp;
+    int nbr;
+    pthread_t thr;
+    pthread_mutex_t *lfm;
+    pthread_mutex_t *rfm;
+    struct s_philo *lpn;
+    struct s_philo *rpn;
 } t_philo;
+
+void ft_printphilosopher(t_philo *p);
+void ft_printtable(t_philo **head);
+void ft_printparams(t_params *params);
