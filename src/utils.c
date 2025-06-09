@@ -24,6 +24,13 @@ void	ft_putstr_fd(char *s, int fd)
 		write (fd, s, ft_strlen(s));
 }
 
+int	ft_abs(int i)
+{
+    if (i < 0)
+        return (-1 * i);
+    return i;
+}
+
 int	ft_atoi(const char *nptr)
 {
 	int			sign;

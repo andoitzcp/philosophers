@@ -7,72 +7,99 @@ void set_params(t_params *params, int argc, char **argv)
     params->tte = ft_atoi(argv[3]);
     params->tts = ft_atoi(argv[4]);
     if (argc == 6)
-        params->tts = ft_atoi(argv[5]);
+        params->nme = ft_atoi(argv[5]);
     else
-        params->tts = -1;
+        params->nme = -1;
     return ;
 }
 
-t_philo *initphilo(t_prompt *prompt)
+pthread_mutex_t *init_fork(t_prompt *prompt)
+{
+    pthread_mutex_t *fork;
+
+    fork = malloc(sizeof(pthread_mutex_t));
+    if (!fork)
+        exit_on_error(prompt, "philosophers:init_fork:fork");
+    return (fork);
+}
+
+t_philo *init_philo(t_prompt *prompt, pthread_mutex_t **tmp_forks)
 {
     static int i = 0;
     t_philo *p;
-    pthread_mutex_t *fork;
+    int nop;
 
+    nop = prompt->params->nop;
     p = malloc(sizeof(t_philo));
     if (!p)
-        exit_on_error(prompt, "philosophers:initphilo:p");
-    fork = malloc(sizeof(pthread_mutex_t));
-    if (!fork)
-        exit_on_error(prompt, "philosophers:initphilo:fork");
-    if (pthread_create(&p->thr, NULL, &routine, NULL) != 0)
-        exit_on_error(prompt, "philosophers:initphilo:thread");
-    if (pthread_mutex_init(fork, NULL) != 0)
-        exit_on_error(prompt, "philosophers:initphilo:mutex");
+        exit_on_error(prompt, "philosophers:init_philo:p");
+    p->nbr = i;
+    p->lfm = tmp_forks[i % nop];
+    p->rfm = tmp_forks[(i + 1) % nop];
+    p->lpn = NULL;
+    p->rpn = NULL;
+    p->last_m = NULL;
+    p->count_m = 0;
     i++;
-    i = p->nbr;
-    p->lfm = fork;
     return (p);
+}
+
+void build_table(t_prompt *prompt, t_philo **tmp_table)
+{
+    t_philo **head;
+    t_philo *p;
+    int nop;
+    int i;
+
+    nop = prompt->params->nop;
+    head = malloc(sizeof(t_philo *));
+    if (!head)
+        exit_on_error(prompt, "philosophers:build_table:head");
+    *head = tmp_table[0];
+    prompt->table = head;
+    i = 0;
+    while (i < nop)
+    {
+        p = tmp_table[i];
+        p->lpn = tmp_table[ft_abs((i - 1) % nop)];
+        p->rpn = tmp_table[ft_abs((i + 1) % nop)];
+        i++;
+    }
 }
 
 // Creates a table structure, which is a circular double linked list. Each node
 // in the structure represents a philosopher which has a fork (pthread_mutes_t)
 // to the right and another to the left. also, each philosopher has 2 adyacent
 // philosphers represented as a pointer to a t_philo node address.
-void inittable(t_prompt *prompt, t_philo **head, t_params *params)
+void init_table(t_prompt *prompt)
 {
+    t_philo **tmp_table;
+    pthread_mutex_t **tmp_forks;
+    int nop;
     int i;
-    t_philo *p;
-    t_philo *tmp;
 
+    nop = prompt->params->nop;
+    tmp_forks = malloc(sizeof(pthread_mutex_t *) * nop);
+    if (!tmp_forks)
+        exit_on_error(prompt, "philosophers:init_table:tmp_forks");
     i = 0;
-    tmp = NULL;
-    while (i++ < params->nop)
-    {
-        p = initphilo(prompt);
-        if (*head == NULL)
-            *head = p;
-        p->lpn = tmp;
-        tmp = p;
-        p = p->rpn;
-    }
-    p = tmp;
-    tmp = *head;
-    tmp->lpn = p;
-    while (i-- > 0)
-    {
-        p->rpn = tmp;
-        p->rfm = tmp->lfm;
-        tmp = p;
-        p = p->lpn;
-    }
+    while (i < nop)
+        tmp_forks[i++] = init_fork(prompt);
+    tmp_table = malloc(sizeof(t_philo *) * nop);
+    if (!tmp_table)
+        exit_on_error(prompt, "philosophers:init_table:tmp_table");
+    i = 0;
+    while (i < nop)
+        tmp_table[i++] = init_philo(prompt, tmp_forks);
+    i = 0;
+    build_table(prompt, tmp_table);
+    free(tmp_table);
+    free(tmp_forks);
 }
 
 t_prompt *init_prompt()
 {
     t_prompt *prompt;
-    t_params *params;
-    t_philo **table;
 
     prompt = malloc(sizeof(t_params));
     if (prompt == NULL)
