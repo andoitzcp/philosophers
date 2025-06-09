@@ -1,21 +1,4 @@
 #include "philo.h"
-#include <bits/pthreadtypes.h>
-#include <bits/types/struct_timeval.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <sys/time.h>
-
-void *routine(void *p)
-{
-    (void)p;
-    struct timeval tv;
-    struct timezone tz;
-
-    gettimeofday(&tv, &tz);
-    printf("Routine\n");
-    printf("Philosopher #%d eats: %ld\n", 1 , tv.tv_sec);
-    return (NULL);
-}
 
 void jointhreads(t_prompt *prompt)
 {
