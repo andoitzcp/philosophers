@@ -13,6 +13,12 @@
   NME: Number of times a philosopher Must Eat
 */
 
+#define ANNOUNCE_FORK "has taken a fork"
+#define ANNOUNCE_EAT "is eating"
+#define ANNOUNCE_SLEEP "is sleeping"
+#define ANNOUNCE_THINK "is thinking"
+#define ANNOUNCE_DEATH "died"
+
 typedef struct s_params
 {
     int nop;
@@ -31,6 +37,8 @@ typedef struct s_philo
     struct s_philo *lpn;
     struct s_philo *rpn;
     struct timeval *last_m;
+    struct timeval *time_s;
+    struct s_prompt *prompt;
     int count_m;
 } t_philo;
 
@@ -38,6 +46,7 @@ typedef struct s_prompt
 {
     struct s_params *params;
     struct s_philo **table;
+    pthread_mutex_t *print_mutex;
 } t_prompt;
 
 void create_threads(t_prompt *prompt);
