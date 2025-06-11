@@ -22,7 +22,7 @@ WHITE = \033[0;97m
 
 #Sources
 
-SRC_FILES	= main init error_handling utils debugging
+SRC_FILES	= main init error_handling utils routine debugging
 
 SRC 		= 	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ 		= 	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))

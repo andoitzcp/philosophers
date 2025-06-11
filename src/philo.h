@@ -57,9 +57,10 @@ void *routine(void *);
 t_prompt *init_prompt();
 void set_params(t_params *params, int argc, char **argv);
 void init_table(t_prompt *prompt);
+struct timeval *init_timevalue(t_prompt *prompt);
 t_philo *init_philo(t_prompt *prompt, pthread_mutex_t **tmp_forks);
 void build_table(t_prompt *prompt, t_philo **tmp_table);
-pthread_mutex_t *init_fork(t_prompt *prompt);
+pthread_mutex_t *init_mutex(t_prompt *prompt);
 
 // Error handling
 void exit_on_error(t_prompt *prompt, char *s);
@@ -71,6 +72,7 @@ size_t	ft_strlen(const char *str);
 int	ft_isdigit(int c);
 void	ft_putstr_fd(char *s, int fd);
 int	ft_abs(int i);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 int	ft_atoi(const char *nptr);
 
 // Debug

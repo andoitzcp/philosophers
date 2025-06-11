@@ -31,6 +31,25 @@ int	ft_abs(int i)
     return i;
 }
 
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char	*cdst;
+	char	*csrc;
+	size_t	index;
+
+	if (!dst && !src)
+		return (dst);
+	cdst = (char *)dst;
+	csrc = (char *)src;
+	index = 0;
+	while (index < n)
+	{
+		cdst[index] = csrc[index];
+		index++;
+	}
+	return (dst);
+}
+
 int	ft_atoi(const char *nptr)
 {
 	int			sign;

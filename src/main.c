@@ -22,7 +22,7 @@ void create_threads(t_prompt *prompt)
     p = *(prompt->table);
     while(p->rpn != *(prompt->table))
     {
-        if (pthread_create(&p->thr, NULL, routine, NULL) != 0)
+        if (pthread_create(&p->thr, NULL, routine, p) != 0)
             exit_on_error(prompt, "philosophers:initphilo:thread");
         p = p->rpn;
     }

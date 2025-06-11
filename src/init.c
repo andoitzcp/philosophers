@@ -13,14 +13,26 @@ void set_params(t_params *params, int argc, char **argv)
     return ;
 }
 
-pthread_mutex_t *init_fork(t_prompt *prompt)
+pthread_mutex_t *init_mutex(t_prompt *prompt)
 {
     pthread_mutex_t *fork;
 
     fork = malloc(sizeof(pthread_mutex_t));
     if (!fork)
-        exit_on_error(prompt, "philosophers:init_fork:fork");
+        exit_on_error(prompt, "philosophers: init_mutex: fork");
     return (fork);
+}
+
+struct timeval *init_timevalue(t_prompt *prompt)
+{
+    struct timeval *tv;
+
+    tv = malloc(sizeof(struct timeval));
+    if (!tv)
+        exit_on_error(prompt, "philosophers: init_timevalue: tv");
+    tv->tv_sec = 0;
+    tv->tv_usec = 0;
+    return (tv);
 }
 
 t_philo *init_philo(t_prompt *prompt, pthread_mutex_t **tmp_forks)
@@ -32,14 +44,16 @@ t_philo *init_philo(t_prompt *prompt, pthread_mutex_t **tmp_forks)
     nop = prompt->params->nop;
     p = malloc(sizeof(t_philo));
     if (!p)
-        exit_on_error(prompt, "philosophers:init_philo:p");
+        exit_on_error(prompt, "philosophers: init_philo: p");
     p->nbr = i;
     p->lfm = tmp_forks[i % nop];
     p->rfm = tmp_forks[(i + 1) % nop];
     p->lpn = NULL;
     p->rpn = NULL;
-    p->last_m = NULL;
+    p->last_m = init_timevalue(prompt);
+    p->time_s = init_timevalue(prompt);
     p->count_m = 0;
+    p->prompt = prompt;
     i++;
     return (p);
 }
@@ -54,7 +68,7 @@ void build_table(t_prompt *prompt, t_philo **tmp_table)
     nop = prompt->params->nop;
     head = malloc(sizeof(t_philo *));
     if (!head)
-        exit_on_error(prompt, "philosophers:build_table:head");
+        exit_on_error(prompt, "philosophers: build_table: head");
     *head = tmp_table[0];
     prompt->table = head;
     i = 0;
@@ -81,13 +95,13 @@ void init_table(t_prompt *prompt)
     nop = prompt->params->nop;
     tmp_forks = malloc(sizeof(pthread_mutex_t *) * nop);
     if (!tmp_forks)
-        exit_on_error(prompt, "philosophers:init_table:tmp_forks");
+        exit_on_error(prompt, "philosophers: init_table: tmp_forks");
     i = 0;
     while (i < nop)
-        tmp_forks[i++] = init_fork(prompt);
+        tmp_forks[i++] = init_mutex(prompt);
     tmp_table = malloc(sizeof(t_philo *) * nop);
     if (!tmp_table)
-        exit_on_error(prompt, "philosophers:init_table:tmp_table");
+        exit_on_error(prompt, "philosophers: init_table: tmp_table");
     i = 0;
     while (i < nop)
         tmp_table[i++] = init_philo(prompt, tmp_forks);
@@ -101,14 +115,17 @@ t_prompt *init_prompt()
 {
     t_prompt *prompt;
 
-    prompt = malloc(sizeof(t_params));
+    prompt = malloc(sizeof(t_prompt));
     if (prompt == NULL)
-        exit_on_error(prompt, "philosophers:init_prompt:prompt:");
+        exit_on_error(prompt, "philosophers: init_prompt: prompt");
     prompt->params = malloc(sizeof(t_params));
     if (prompt->params == NULL)
-        exit_on_error(prompt, "philosophers:init_prompt:params:");
+        exit_on_error(prompt, "philosophers: init_prompt: params");
     prompt->table = malloc(sizeof(t_philo *));
-    if (prompt->params == NULL)
-        exit_on_error(prompt, "philosophers:init_prompt:table:");
+    if (prompt->table== NULL)
+        exit_on_error(prompt, "philosophers: init_prompt: table");
+    prompt->print_mutex = init_mutex(prompt);
+    if (prompt->print_mutex== NULL)
+        exit_on_error(prompt, "philosophers: init_prompt: print_mutex");
     return (prompt);
 }
