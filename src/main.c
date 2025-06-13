@@ -28,6 +28,8 @@ void create_threads(t_prompt *prompt)
             exit_on_error(prompt, "philosophers: initphilo: thread");
         p = p->rpn;
     }
+    if (pthread_create(&p->thr, NULL, routine, p) != 0)
+        exit_on_error(prompt, "philosophers: initphilo: thread");
 }
 
 int main(int argc, char **argv)
