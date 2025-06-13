@@ -33,13 +33,13 @@ int action_take_forks(t_philo *philo)
     	pthread_mutex_lock(philo->lfm);
 	else
     	pthread_mutex_lock(philo->rfm);
-    gettimeofday(philo->time_s, NULL);
+    gettimeofday(philo->time_s, 0);
     Announce(philo, ANNOUNCE_FORK);
 	if (philo->nbr % 2 == 0)
     	pthread_mutex_lock(philo->rfm);
 	else
     	pthread_mutex_lock(philo->lfm);
-    gettimeofday(philo->time_s, NULL);
+    gettimeofday(philo->time_s, 0);
     Announce(philo, ANNOUNCE_FORK);
     return (1);
 }
@@ -66,15 +66,15 @@ int action_sleep(t_philo *philo)
     t_params *params;
 
     params = philo->prompt->params;
-    gettimeofday(philo->time_s, NULL);
+    gettimeofday(philo->time_s, 0);
     Announce(philo, ANNOUNCE_SLEEP);
-    usleep(params->tts * 1000);
+    usleep(params->tts);
     return (1);
 }
 
 int action_think(t_philo *philo)
 {
-    gettimeofday(philo->time_s, NULL);
+    gettimeofday(philo->time_s, 0);
     Announce(philo, ANNOUNCE_THINK);
     return (1);
 }
