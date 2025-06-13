@@ -3,9 +3,9 @@
 void set_params(t_params *params, int argc, char **argv)
 {
     params->nop = ft_atoi(argv[1]);
-    params->ttd = ft_atoi(argv[2]);
-    params->tte = ft_atoi(argv[3]);
-    params->tts = ft_atoi(argv[4]);
+    params->ttd = ft_atoi(argv[2]) * 1000;
+    params->tte = ft_atoi(argv[3]) * 1000;
+    params->tts = ft_atoi(argv[4]) * 1000;
     if (argc == 6)
         params->nme = ft_atoi(argv[5]);
     else
