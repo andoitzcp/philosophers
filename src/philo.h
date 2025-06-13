@@ -44,14 +44,24 @@ typedef struct s_philo
 
 typedef struct s_prompt
 {
+    int someone_has_died;
     struct s_params *params;
     struct s_philo **table;
+    pthread_t orchttr;
     pthread_mutex_t *print_mutex;
 } t_prompt;
 
 void create_threads(t_prompt *prompt);
 void jointhreads(t_prompt *prompt);
+// Routine
 void *routine(void *);
+int action_take_forks(t_philo *philo);
+int action_eat(t_philo *philo);
+int action_sleep(t_philo *philo);
+int action_think(t_philo *philo);
+
+// Control
+void *control(void *p);
 
 //Initializations
 t_prompt *init_prompt();
@@ -67,13 +77,17 @@ void exit_on_error(t_prompt *prompt, char *s);
 void cleanup(t_prompt *prompt);
 void free_table(t_philo **head);
 
-// Utils
+// Utils libft
 size_t	ft_strlen(const char *str);
 int	ft_isdigit(int c);
 void	ft_putstr_fd(char *s, int fd);
 int	ft_abs(int i);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 int	ft_atoi(const char *nptr);
+
+// Utils
+unsigned long get_time_in_microseconds(struct timeval *tv);
+void Announce(t_philo *philo, char *s);
 
 // Debug
 void ft_printphilosopher(t_philo *p);

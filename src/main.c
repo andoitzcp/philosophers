@@ -10,7 +10,7 @@ void jointhreads(t_prompt *prompt)
     while (p->rpn != *head)
     {
         if (pthread_join(p->thr, NULL) != 0)
-            exit_on_error(prompt, "philosophers:jointhreads:thread");
+            exit_on_error(prompt, "philosophers: jointhreads: thread");
         p = p->rpn;
     }
 }
@@ -19,11 +19,13 @@ void create_threads(t_prompt *prompt)
 {
     t_philo *p;
 
+    if (pthread_create(&prompt->orchttr, NULL, control, prompt) != 0)
+        exit_on_error(prompt, "philosophers: initphilo: thread");
     p = *(prompt->table);
     while(p->rpn != *(prompt->table))
     {
         if (pthread_create(&p->thr, NULL, routine, p) != 0)
-            exit_on_error(prompt, "philosophers:initphilo:thread");
+            exit_on_error(prompt, "philosophers: initphilo: thread");
         p = p->rpn;
     }
 }
@@ -34,7 +36,7 @@ int main(int argc, char **argv)
 
     if (argc != 5 && argc != 6)
     {
-        ft_putstr_fd("philosophers:main:incorrect number of arguments\n", 2);
+        ft_putstr_fd("philosophers: main: incorrect number of arguments\n", 2);
         return (EXIT_FAILURE);
     }
     prompt = init_prompt();
@@ -42,7 +44,7 @@ int main(int argc, char **argv)
     ft_printparams(prompt->params);
     prompt->table = NULL;
     init_table(prompt);
-    ft_printtable(prompt->table);
+    prompt->someone_has_died = 0;
     create_threads(prompt);
     jointhreads(prompt);
     return (EXIT_SUCCESS);

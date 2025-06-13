@@ -48,7 +48,7 @@ int action_eat(t_philo *philo)
               sizeof(time_t));
     ft_memcpy(&(philo->last_m->tv_usec), &(philo->time_s->tv_usec),
               sizeof(suseconds_t));
-    return (1); // borrar
+    return (1);
 }
 
 int action_sleep(t_philo *philo)
@@ -59,14 +59,14 @@ int action_sleep(t_philo *philo)
     gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_SLEEP);
     usleep(params->tts);
-    return (1); // borrar
+    return (1);
 }
 
 int action_think(t_philo *philo)
 {
     gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_THINK);
-    return (1); // borrar
+    return (1);
 }
 
 void *routine(void *p)
@@ -80,10 +80,35 @@ void *routine(void *p)
     i = 0;
     while (i++ < params->nme)
     {
+        if (philo->prompt->someone_has_died == 1)
+        {
+            printf("flag100\n");
+            break ;
+        }
         action_take_forks(philo);
+        if (philo->prompt->someone_has_died == 1)
+        {
+            printf("flag101\n");
+            break ;
+        }
         action_eat(philo);
+        if (philo->prompt->someone_has_died == 1)
+        {
+            printf("flag102\n");
+            break ;
+        }
         action_sleep(philo);
+        if (philo->prompt->someone_has_died == 1)
+        {
+            printf("flag103\n");
+            break ;
+        }
         action_think(philo);
+        if (philo->prompt->someone_has_died == 1)
+        {
+            printf("flag104\n");
+            break ;
+        }
     }
     return (p);
 }
