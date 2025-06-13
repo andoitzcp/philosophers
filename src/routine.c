@@ -1,5 +1,7 @@
 #include "philo.h"
 
+// valgrind --tool=helgrind --tool=drd
+
 unsigned long get_time_in_microseconds(struct timeval *tv)
 {
     time_t seconds;
@@ -18,7 +20,7 @@ void Announce(t_philo *philo, char *s)
     unsigned long usecs;
 
     prompt = philo->prompt;
-    usecs = get_time_in_microseconds(philo->time_s);
+    usecs = get_time_in_microseconds(philo->time_s) / 1000;
     pthread_mutex_lock(prompt->print_mutex);
     printf("%ld %d %s\n", usecs, philo->nbr, s);
     pthread_mutex_unlock(prompt->print_mutex);
@@ -26,10 +28,17 @@ void Announce(t_philo *philo, char *s)
 
 int action_take_forks(t_philo *philo)
 {
-    pthread_mutex_lock(philo->lfm);
+	if (philo->nbr % 2 == 0)
+    	pthread_mutex_lock(philo->lfm);
+	else
+    	pthread_mutex_lock(philo->rfm);
     gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_FORK);
-    pthread_mutex_lock(philo->rfm);
+	if (philo->nbr % 2 == 0)
+    	pthread_mutex_lock(philo->rfm);
+	else
+    	pthread_mutex_lock(philo->lfm);
+    gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_FORK);
     return (1);
 }
@@ -41,7 +50,7 @@ int action_eat(t_philo *philo)
     params = philo->prompt->params;
     gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_EAT);
-    usleep(params->tte);
+    usleep(params->tte * 1000);
     pthread_mutex_unlock(philo->lfm);
     pthread_mutex_unlock(philo->rfm);
     ft_memcpy(&(philo->last_m->tv_sec), &(philo->time_s->tv_sec),
@@ -58,7 +67,7 @@ int action_sleep(t_philo *philo)
     params = philo->prompt->params;
     gettimeofday(philo->time_s, NULL);
     Announce(philo, ANNOUNCE_SLEEP);
-    usleep(params->tts);
+    usleep(params->tts * 1000);
     return (1);
 }
 
@@ -85,30 +94,35 @@ void *routine(void *p)
             printf("flag100\n");
             break ;
         }
+		usleep(10);
         action_take_forks(philo);
         if (philo->prompt->someone_has_died == 1)
         {
             printf("flag101\n");
             break ;
         }
+		usleep(10);
         action_eat(philo);
         if (philo->prompt->someone_has_died == 1)
         {
             printf("flag102\n");
             break ;
         }
+		usleep(10);
         action_sleep(philo);
         if (philo->prompt->someone_has_died == 1)
         {
             printf("flag103\n");
             break ;
         }
+		usleep(10);
         action_think(philo);
         if (philo->prompt->someone_has_died == 1)
         {
             printf("flag104\n");
             break ;
         }
+		usleep(10);
     }
     return (p);
 }

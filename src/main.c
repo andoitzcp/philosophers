@@ -44,6 +44,7 @@ int main(int argc, char **argv)
     ft_printparams(prompt->params);
     prompt->table = NULL;
     init_table(prompt);
+	ft_printtable(prompt->table);
     prompt->someone_has_died = 0;
     create_threads(prompt);
     jointhreads(prompt);

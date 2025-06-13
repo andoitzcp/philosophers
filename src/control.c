@@ -8,7 +8,7 @@ int is_alive_philo(t_philo *philo)
     struct timeval tv;
     struct timeval tv2;
 
-    time_to_die = philo->prompt->params->ttd;
+    time_to_die = philo->prompt->params->ttd * 1000;
     tv2.tv_sec = philo->last_m->tv_sec;
     tv2.tv_usec = time_to_die + philo->last_m->tv_usec;
     if (get_time_in_microseconds(philo->last_m) == 0)
@@ -16,6 +16,7 @@ int is_alive_philo(t_philo *philo)
     gettimeofday(&tv, NULL);
     death_time = get_time_in_microseconds(&tv2);
     current_time = get_time_in_microseconds(&tv);
+	//printf("flag00:time to die = %ld\n", death_time - current_time);
     if (death_time < current_time)
         return (0);
     else
@@ -40,7 +41,7 @@ void *control(void *p)
             break ;
         }
         if (philo == *head)
-            usleep(10);
+            usleep(1000);
         philo = philo->rpn;
     }
     /* while (philo->rpn != *head) */
