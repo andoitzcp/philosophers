@@ -14,11 +14,22 @@
   NME: Number of times a philosopher Must Eat
 */
 
-#define ANNOUNCE_FORK "has taken a fork"
-#define ANNOUNCE_EAT "is eating"
-#define ANNOUNCE_SLEEP "is sleeping"
-#define ANNOUNCE_THINK "is thinking"
-#define ANNOUNCE_DEATH "died"
+// Color scape secuences: thanks to javi
+#define  BLACK   "\e[0;30m"
+#define  RED     "\e[0;31m"
+#define  GREEN   "\e[0;32m"
+#define  YELLOW  "\e[0;33m"
+#define  BLUE    "\e[0;34m"
+#define  PURPLE  "\e[0;35m"
+#define  CYAN    "\e[0;36m"
+#define  WHITE   "\e[0;37m"
+#define  RESET   "\x1b[0m"
+
+#define ANNOUNCE_FORK CYAN"has taken a fork"WHITE
+#define ANNOUNCE_EAT GREEN"is eating"WHITE
+#define ANNOUNCE_SLEEP BLUE"is sleeping"WHITE
+#define ANNOUNCE_THINK YELLOW"is thinking"WHITE
+#define ANNOUNCE_DEATH RED"died"WHITE
 
 typedef struct s_params
 {
