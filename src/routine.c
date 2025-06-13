@@ -91,38 +91,23 @@ void *routine(void *p)
     while (i++ < params->nme)
     {
         if (philo->prompt->someone_has_died == 1)
-        {
-            printf("flag100\n");
             break ;
-        }
 		usleep(10);
         action_take_forks(philo);
         if (philo->prompt->someone_has_died == 1)
-        {
-            printf("flag101\n");
             break ;
-        }
 		usleep(10);
         action_eat(philo);
         if (philo->prompt->someone_has_died == 1)
-        {
-            printf("flag102\n");
             break ;
-        }
 		usleep(10);
         action_sleep(philo);
         if (philo->prompt->someone_has_died == 1)
-        {
-            printf("flag103\n");
             break ;
-        }
 		usleep(10);
         action_think(philo);
         if (philo->prompt->someone_has_died == 1)
-        {
-            printf("flag104\n");
             break ;
-        }
 		usleep(10);
     }
     return (p);
