@@ -51,10 +51,10 @@ int main(int argc, char **argv)
     }
     init_prompt(&prompt, &params, &table);
     set_params(&params, argc, argv);
-    ft_printparams(&params);
+    //ft_printparams(&params);
     prompt.table[0] = NULL;
     init_table(&prompt, philos, forks);
-	ft_printtable(&table);
+	//ft_printtable(&table);
     prompt.someone_has_died = 0;
     create_threads(&prompt);
     jointhreads(&prompt);
