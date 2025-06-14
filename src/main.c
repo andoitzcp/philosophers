@@ -34,21 +34,25 @@ void create_threads(t_prompt *prompt)
 
 int main(int argc, char **argv)
 {
-    t_prompt *prompt;
+    t_prompt prompt;
+    t_params params;
+    t_philo *table;
+    t_philo philos[200];
+    pthread_mutex_t forks[200];
 
     if (argc != 5 && argc != 6)
     {
         ft_putstr_fd("philosophers: main: incorrect number of arguments\n", 2);
         return (EXIT_FAILURE);
     }
-    prompt = init_prompt();
-    set_params(prompt->params, argc, argv);
-    ft_printparams(prompt->params);
-    prompt->table = NULL;
-    init_table(prompt);
-	ft_printtable(prompt->table);
-    prompt->someone_has_died = 0;
-    create_threads(prompt);
-    jointhreads(prompt);
+    init_prompt(&prompt, &params, &table);
+    set_params(&params, argc, argv);
+    ft_printparams(&params);
+    prompt.table[0] = NULL;
+    init_table(&prompt, philos, forks);
+	ft_printtable(&table);
+    prompt.someone_has_died = 0;
+    create_threads(&prompt);
+    jointhreads(&prompt);
     return (EXIT_SUCCESS);
 }

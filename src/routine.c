@@ -2,14 +2,14 @@
 
 // valgrind --tool=helgrind --tool=drd
 
-unsigned long get_time_in_microseconds(struct timeval *tv)
+unsigned long get_time_in_microseconds(struct timeval tv)
 {
     time_t seconds;
     suseconds_t microseconds;
     unsigned long usecs;
 
-    seconds = tv->tv_sec;
-    microseconds = tv->tv_usec;
+    seconds = tv.tv_sec;
+    microseconds = tv.tv_usec;
     usecs = 1000000 * seconds + microseconds;
     return (usecs);
 }
@@ -21,10 +21,10 @@ void Announce(t_philo *philo, char *s)
 
     prompt = philo->prompt;
     usecs = get_time_in_microseconds(philo->time_s) / 1000;
-    pthread_mutex_lock(prompt->print_mutex);
+    pthread_mutex_lock(&(prompt->print_mutex));
     if (philo->prompt->someone_has_died == 0)
         printf("%ld %d %s\n", usecs, philo->nbr, s);
-    pthread_mutex_unlock(prompt->print_mutex);
+    pthread_mutex_unlock(&(prompt->print_mutex));
 }
 
 int action_take_forks(t_philo *philo)
@@ -33,13 +33,13 @@ int action_take_forks(t_philo *philo)
     	pthread_mutex_lock(philo->lfm);
 	else
     	pthread_mutex_lock(philo->rfm);
-    gettimeofday(philo->time_s, 0);
+    gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_FORK);
 	if (philo->nbr % 2 == 0)
     	pthread_mutex_lock(philo->rfm);
 	else
     	pthread_mutex_lock(philo->lfm);
-    gettimeofday(philo->time_s, 0);
+    gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_FORK);
     return (1);
 }
@@ -49,15 +49,13 @@ int action_eat(t_philo *philo)
     t_params *params;
 
     params = philo->prompt->params;
-    gettimeofday(philo->time_s, 0);
+    gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_EAT);
     usleep(params->tte);
     pthread_mutex_unlock(philo->lfm);
     pthread_mutex_unlock(philo->rfm);
-    ft_memcpy(&(philo->last_m->tv_sec), &(philo->time_s->tv_sec),
-              sizeof(time_t));
-    ft_memcpy(&(philo->last_m->tv_usec), &(philo->time_s->tv_usec),
-              sizeof(suseconds_t));
+    philo->last_m.tv_sec = philo->time_s.tv_sec;
+    philo->last_m.tv_usec = philo->time_s.tv_usec;
     return (1);
 }
 
@@ -66,7 +64,7 @@ int action_sleep(t_philo *philo)
     t_params *params;
 
     params = philo->prompt->params;
-    gettimeofday(philo->time_s, 0);
+    gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_SLEEP);
     usleep(params->tts);
     return (1);
@@ -74,7 +72,7 @@ int action_sleep(t_philo *philo)
 
 int action_think(t_philo *philo)
 {
-    gettimeofday(philo->time_s, 0);
+    gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_THINK);
     return (1);
 }

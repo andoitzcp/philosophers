@@ -48,8 +48,8 @@ typedef struct s_philo
     pthread_mutex_t *rfm;
     struct s_philo *lpn;
     struct s_philo *rpn;
-    struct timeval *last_m;
-    struct timeval *time_s;
+    struct timeval last_m;
+    struct timeval time_s;
     struct s_prompt *prompt;
     int count_m;
 } t_philo;
@@ -60,7 +60,7 @@ typedef struct s_prompt
     struct s_params *params;
     struct s_philo **table;
     pthread_t orchttr;
-    pthread_mutex_t *print_mutex;
+    pthread_mutex_t print_mutex;
 } t_prompt;
 
 void create_threads(t_prompt *prompt);
@@ -76,13 +76,11 @@ int action_think(t_philo *philo);
 void *control(void *p);
 
 //Initializations
-t_prompt *init_prompt();
+void init_prompt(t_prompt *prompt, t_params *params, t_philo **table);
 void set_params(t_params *params, int argc, char **argv);
-void init_table(t_prompt *prompt);
-struct timeval *init_timevalue(t_prompt *prompt);
-t_philo *init_philo(t_prompt *prompt, pthread_mutex_t **tmp_forks);
-void build_table(t_prompt *prompt, t_philo **tmp_table);
-pthread_mutex_t *init_mutex(t_prompt *prompt);
+void init_table(t_prompt *prompt, t_philo *philos, pthread_mutex_t *forks);
+void init_philo(t_prompt *prompt, t_philo *philo, pthread_mutex_t *forks);
+void build_table(t_prompt *prompt, t_philo *philos);
 
 // Error handling
 void exit_on_error(t_prompt *prompt, char *s);
@@ -98,7 +96,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 int	ft_atoi(const char *nptr);
 
 // Utils
-unsigned long get_time_in_microseconds(struct timeval *tv);
+unsigned long get_time_in_microseconds(struct timeval tv);
 void Announce(t_philo *philo, char *s);
 
 // Debug
