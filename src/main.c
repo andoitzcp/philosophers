@@ -5,6 +5,8 @@ void jointhreads(t_prompt *prompt)
     t_philo **head;
     t_philo *p;
 
+    if (pthread_join(prompt->orchttr, NULL) != 0)
+        exit_on_error(prompt, "philosophers: jointhreads: orchttr");
     head = prompt->table;
     p = *head;
     while (p->rpn != *head)
@@ -13,6 +15,8 @@ void jointhreads(t_prompt *prompt)
             exit_on_error(prompt, "philosophers: jointhreads: thread");
         p = p->rpn;
     }
+    if (pthread_join(p->thr, NULL) != 0)
+        exit_on_error(prompt, "philosophers: jointhreads: thread");
 }
 
 void create_threads(t_prompt *prompt)
@@ -20,7 +24,7 @@ void create_threads(t_prompt *prompt)
     t_philo *p;
 
     if (pthread_create(&prompt->orchttr, NULL, control, prompt) != 0)
-        exit_on_error(prompt, "philosophers: initphilo: thread");
+        exit_on_error(prompt, "philosophers: initphilo: orchttr");
     p = *(prompt->table);
     while(p->rpn != *(prompt->table))
     {
