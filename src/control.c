@@ -8,18 +8,50 @@ int is_alive_philo(t_philo *philo)
     struct timeval tv;
     struct timeval tv2;
 
+    gettimeofday(&tv, NULL);
     time_to_die = philo->prompt->params->ttd;
     tv2.tv_sec = philo->last_m.tv_sec;
     tv2.tv_usec = time_to_die + philo->last_m.tv_usec;
     if (get_time_in_microseconds(philo->last_m) == 0)
         return (1);
-    gettimeofday(&tv, NULL);
     death_time = get_time_in_microseconds(tv2);
     current_time = get_time_in_microseconds(tv);
+    fprintf(stdout, "flag100: nbr=%d, dt=%ld, ct=%ld, dt-ct=%ld\n", philo->nbr, death_time, current_time, death_time - current_time);
     if (death_time < current_time)
         return (0);
     else
         return (1);
+}
+
+int is_philo_finished_eating(t_prompt *prompt, t_philo *philo)
+{
+    int target;
+
+    target = prompt->params->nme;
+    if (target == -1)
+        return (0);
+    if (philo->count_m < target)
+        return (0);
+    else
+        return (1);
+
+
+}
+
+int all_have_eaten(t_prompt *prompt)
+{
+    t_philo *p;
+
+    p = *(prompt->table);
+    while (p->rpn != *(prompt->table))
+    {
+        if (is_philo_finished_eating(prompt, p) == 0)
+            return (0);
+        p = p->rpn;
+    }
+    if (is_philo_finished_eating(prompt, p) == 0)
+        return (0);
+    return (1);
 }
 
 void *control(void *p)
@@ -33,14 +65,16 @@ void *control(void *p)
     philo = *head;
     while (philo->rpn)
     {
-        if (is_alive_philo(philo) == 0)
+        if (all_have_eaten(prompt))
+            break ;
+        if (is_alive_philo(philo) == 0 && !is_philo_finished_eating(prompt, philo))
         {
             Announce(philo, ANNOUNCE_DEATH);
             prompt->someone_has_died = 1;
             break ;
         }
-        if (philo == *head)
-            usleep(1000);
+        //if (philo == *head)
+            //usleep(50);
         philo = philo->rpn;
     }
     /* while (philo->rpn != *head) */

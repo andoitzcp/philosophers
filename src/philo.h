@@ -74,6 +74,9 @@ int action_think(t_philo *philo);
 
 // Control
 void *control(void *p);
+int is_alive_philo(t_philo *philo);
+int is_philo_finished_eating(t_prompt *prompt, t_philo *philo);
+int all_have_eaten(t_prompt *prompt);
 
 //Initializations
 void init_prompt(t_prompt *prompt, t_params *params, t_philo **table);

@@ -18,27 +18,25 @@ void Announce(t_philo *philo, char *s)
 {
     t_prompt *prompt;
     unsigned long usecs;
+    unsigned long curr;
+    struct timeval tv;
 
     prompt = philo->prompt;
     usecs = get_time_in_microseconds(philo->time_s) / 1000;
+    gettimeofday(&tv, 0);
+    curr = get_time_in_microseconds(philo->time_s) / 1000;
     pthread_mutex_lock(&(prompt->print_mutex));
     if (philo->prompt->someone_has_died == 0)
-        printf("%ld %d %s\n", usecs, philo->nbr, s);
+        printf("curr:%ld when:%ld %d %s\n",curr, usecs, philo->nbr, s);
     pthread_mutex_unlock(&(prompt->print_mutex));
 }
 
 int action_take_forks(t_philo *philo)
 {
-	if (philo->nbr % 2 == 0)
-    	pthread_mutex_lock(philo->lfm);
-	else
-    	pthread_mutex_lock(philo->rfm);
+    pthread_mutex_lock(philo->lfm);
     gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_FORK);
-	if (philo->nbr % 2 == 0)
-    	pthread_mutex_lock(philo->rfm);
-	else
-    	pthread_mutex_lock(philo->lfm);
+    pthread_mutex_lock(philo->rfm);
     gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_FORK);
     return (1);
@@ -48,6 +46,7 @@ int action_eat(t_philo *philo)
 {
     t_params *params;
 
+    philo->count_m += 1;
     params = philo->prompt->params;
     gettimeofday(&(philo->time_s), 0);
     Announce(philo, ANNOUNCE_EAT);
@@ -79,34 +78,34 @@ int action_think(t_philo *philo)
 
 void *routine(void *p)
 {
-    int i;
     t_philo *philo;
-    t_params *params;
+    //t_params *params;
 
     philo = (t_philo *)p;
-    params = philo->prompt->params;
-    i = 0;
-    while (i++ < params->nme)
+    //params = philo->prompt->params;
+    action_think(philo);
+    //usleep(params->ttd * philo->nbr / 10);
+    while (is_philo_finished_eating(philo->prompt, philo) == 0)
     {
         if (philo->prompt->someone_has_died == 1)
             break ;
-		usleep(10);
+		//usleep(10);
         action_take_forks(philo);
         if (philo->prompt->someone_has_died == 1)
             break ;
-		usleep(10);
+		//usleep(10);
         action_eat(philo);
         if (philo->prompt->someone_has_died == 1)
             break ;
-		usleep(10);
+		//usleep(10);
         action_sleep(philo);
         if (philo->prompt->someone_has_died == 1)
             break ;
-		usleep(10);
         action_think(philo);
         if (philo->prompt->someone_has_died == 1)
             break ;
-		usleep(10);
+		//usleep(10);
+		//usleep(10);
     }
     return (p);
 }
