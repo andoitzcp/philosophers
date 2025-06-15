@@ -37,7 +37,7 @@ void Announce(t_philo *philo, char *s, t_tstamp *ts)
     prompt = philo->prompt;
     usecs = get_tstamp_usecs(ts) / 1000;
     pthread_mutex_lock(&(prompt->print_mutex));
-    if (philo->prompt->someone_has_died == 0)
+    if (get_death_flag(philo->prompt) == 0)
         printf("%ld %d %s\n",usecs, philo->nbr, s);
     pthread_mutex_unlock(&(prompt->print_mutex));
 }
@@ -96,22 +96,22 @@ void *routine(void *p)
     usleep(params->ttd * philo->nbr / 100);
     while (is_philo_finished_eating(philo->prompt, philo) == 0)
     {
-        if (philo->prompt->someone_has_died == 1)
+        if (get_death_flag(philo->prompt) == 1)
             break ;
 		//usleep(10);
         action_take_forks(philo);
-        if (philo->prompt->someone_has_died == 1)
+        if (get_death_flag(philo->prompt) == 1)
             break ;
 		//usleep(10);
         action_eat(philo);
-        if (philo->prompt->someone_has_died == 1)
+        if (get_death_flag(philo->prompt) == 1)
             break ;
 		//usleep(10);
         action_sleep(philo);
-        if (philo->prompt->someone_has_died == 1)
+        if (get_death_flag(philo->prompt) == 1)
             break ;
         action_think(philo);
-        if (philo->prompt->someone_has_died == 1)
+        if (get_death_flag(philo->prompt) == 1)
             break ;
 		//usleep(10);
 		//usleep(10);

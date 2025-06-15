@@ -75,6 +75,7 @@ typedef struct s_prompt
     struct s_philo **table;
     pthread_t orchttr;
     pthread_mutex_t print_mutex;
+    pthread_mutex_t death_mutex;
 } t_prompt;
 
 void create_threads(t_prompt *prompt);
@@ -118,6 +119,8 @@ void Announce(t_philo *philo, char *s, t_tstamp *ts);
 void init_tstamp(t_tstamp *tstamp);
 void update_tstamp(t_tstamp *tstamp);
 unsigned long get_tstamp_usecs(t_tstamp *tstamp);
+void set_death_flag(t_prompt *prompt, int val);
+int get_death_flag(t_prompt *prompt);
 
 // Debug
 void ft_printphilosopher(t_philo *p);

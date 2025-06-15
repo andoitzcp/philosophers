@@ -1,5 +1,22 @@
 #include "philo.h"
 
+void set_death_flag(t_prompt *prompt, int val)
+{
+    pthread_mutex_lock(&(prompt->death_mutex));
+    prompt->someone_has_died = val;
+    pthread_mutex_unlock(&(prompt->death_mutex));
+}
+
+int get_death_flag(t_prompt *prompt)
+{
+    int death_flag;
+
+    pthread_mutex_lock(&(prompt->death_mutex));
+    death_flag = prompt->someone_has_died;
+    pthread_mutex_unlock(&(prompt->death_mutex));
+    return (death_flag);
+}
+
 int is_alive_philo(t_philo *philo)
 {
     unsigned long death_time;
@@ -64,7 +81,7 @@ void *control(void *p)
         {
             update_tstamp(&(philo->tsd));
             Announce(philo, ANNOUNCE_DEATH, &(philo->tsd));
-            prompt->someone_has_died = 1;
+            set_death_flag(prompt, 1);
             break ;
         }
         if (philo == *head)

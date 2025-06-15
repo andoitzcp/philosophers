@@ -23,6 +23,7 @@ void init_philo(t_prompt *prompt, t_philo *philo, pthread_mutex_t *forks)
     philo->nbr = i + 1;
     philo->lfm = &forks[i % nop];
     philo->rfm = &forks[(i + 1) % nop];
+    pthread_mutex_init(&(prompt->death_mutex), NULL);
     philo->lpn = NULL;
     philo->rpn = NULL;
     init_tstamp(&(philo->tsf));
@@ -77,5 +78,6 @@ void init_prompt(t_prompt *prompt, t_params *params, t_philo **table)
     prompt->params = params;
     prompt->table = table;
     pthread_mutex_init(&(prompt->print_mutex), NULL);
+    pthread_mutex_init(&(prompt->death_mutex), NULL);
     return ;
 }
