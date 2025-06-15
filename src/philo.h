@@ -31,6 +31,10 @@
 #define ANNOUNCE_THINK YELLOW"is thinking"WHITE
 #define ANNOUNCE_DEATH RED"died"WHITE
 
+// TS: Time Stamp
+//      F: Fork, M: Meal, S: Sleep T: Think
+//enum {TSF,     TSM,     TSS,     TST};
+
 typedef struct s_params
 {
     int nop;
@@ -40,6 +44,13 @@ typedef struct s_params
     int nme;
 } t_params;
 
+typedef struct s_tstamp
+{
+    struct timeval tv;
+    pthread_mutex_t mtx;
+    unsigned long usecs;
+} t_tstamp;
+
 typedef struct s_philo
 {
     int nbr;
@@ -48,8 +59,11 @@ typedef struct s_philo
     pthread_mutex_t *rfm;
     struct s_philo *lpn;
     struct s_philo *rpn;
-    struct timeval last_m;
-    struct timeval time_s;
+    struct s_tstamp tsf;
+    struct s_tstamp tsm;
+    struct s_tstamp tss;
+    struct s_tstamp tst;
+    struct s_tstamp tsd;
     struct s_prompt *prompt;
     int count_m;
 } t_philo;
@@ -100,7 +114,10 @@ int	ft_atoi(const char *nptr);
 
 // Utils
 unsigned long get_time_in_microseconds(struct timeval tv);
-void Announce(t_philo *philo, char *s);
+void Announce(t_philo *philo, char *s, t_tstamp *ts);
+void init_tstamp(t_tstamp *tstamp);
+void update_tstamp(t_tstamp *tstamp);
+unsigned long get_tstamp_usecs(t_tstamp *tstamp);
 
 // Debug
 void ft_printphilosopher(t_philo *p);

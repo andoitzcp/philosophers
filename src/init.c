@@ -25,8 +25,11 @@ void init_philo(t_prompt *prompt, t_philo *philo, pthread_mutex_t *forks)
     philo->rfm = &forks[(i + 1) % nop];
     philo->lpn = NULL;
     philo->rpn = NULL;
-    philo->last_m.tv_sec = 0;
-    philo->time_s.tv_usec = 0;
+    init_tstamp(&(philo->tsf));
+    init_tstamp(&(philo->tsm));
+    init_tstamp(&(philo->tss));
+    init_tstamp(&(philo->tst));
+    init_tstamp(&(philo->tsd));
     philo->count_m = 0;
     philo->prompt = prompt;
     i++;
