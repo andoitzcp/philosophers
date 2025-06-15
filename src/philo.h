@@ -57,6 +57,7 @@ typedef struct s_philo
     pthread_t thr;
     pthread_mutex_t *lfm;
     pthread_mutex_t *rfm;
+    pthread_mutex_t mcm;
     struct s_philo *lpn;
     struct s_philo *rpn;
     struct s_tstamp tsf;

@@ -57,7 +57,9 @@ int action_eat(t_philo *philo)
 {
     t_params *params;
 
+    pthread_mutex_lock(&(philo->mcm));
     philo->count_m += 1;
+    pthread_mutex_unlock(&(philo->mcm));
     params = philo->prompt->params;
     update_tstamp(&(philo->tsm));
     Announce(philo, ANNOUNCE_EAT, &(philo->tsm));

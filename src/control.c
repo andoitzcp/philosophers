@@ -41,10 +41,17 @@ int is_philo_finished_eating(t_prompt *prompt, t_philo *philo)
     target = prompt->params->nme;
     if (target == -1)
         return (0);
+    pthread_mutex_lock(&(philo->mcm));
     if (philo->count_m < target)
+    {
+        pthread_mutex_unlock(&(philo->mcm));
         return (0);
+    }
     else
+    {
+        pthread_mutex_unlock(&(philo->mcm));
         return (1);
+    }
 }
 
 int all_have_eaten(t_prompt *prompt)
