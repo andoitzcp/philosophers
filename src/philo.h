@@ -31,6 +31,8 @@
 #define ANNOUNCE_THINK YELLOW"is thinking"WHITE
 #define ANNOUNCE_DEATH RED"died"WHITE
 
+#define MAX_PHILO_NUMBER 200
+
 // TS: Time Stamp
 //      F: Fork, M: Meal, S: Sleep T: Think
 //enum {TSF,     TSM,     TSS,     TST};

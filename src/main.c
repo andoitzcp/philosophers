@@ -41,8 +41,8 @@ int main(int argc, char **argv)
     t_prompt prompt;
     t_params params;
     t_philo *table;
-    t_philo philos[200];
-    pthread_mutex_t forks[200];
+    t_philo philos[MAX_PHILO_NUMBER];
+    pthread_mutex_t forks[MAX_PHILO_NUMBER];
 
     if (argc != 5 && argc != 6)
     {
@@ -51,6 +51,11 @@ int main(int argc, char **argv)
     }
     init_prompt(&prompt, &params, &table);
     set_params(&params, argc, argv);
+    if (params.nop > MAX_PHILO_NUMBER)
+    {
+        ft_putstr_fd("philosophers: main: number of philosophers exceeded maximum\n", 2);
+        return (EXIT_FAILURE);
+    }
     //ft_printparams(&params);
     prompt.table[0] = NULL;
     init_table(&prompt, philos, forks);
