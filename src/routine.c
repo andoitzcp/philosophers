@@ -84,6 +84,11 @@ int action_think(t_philo *philo)
 {
     update_tstamp(&(philo->tst));
     Announce(philo, ANNOUNCE_THINK, &(philo->tst));
+    if (philo->prompt->params->nop == 1)
+    {
+        update_tstamp(&(philo->tsm));
+        usleep(philo->prompt->params->ttd * 2);
+    }
     return (1);
 }
 
