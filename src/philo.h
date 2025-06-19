@@ -33,6 +33,17 @@
 
 #define MAX_PHILO_NUMBER 200
 
+#define EXIT_MODE_PUTSTR 0
+#define EXIT_MODE_PERROR 1
+
+#define ERROR_STR_01 "philosophers: main: incorrect number of arguments\n"
+#define ERROR_STR_02 "philosophers: main: not valid input parameters\n"
+#define ERROR_STR_03 "philosophers: main: number of philosophers exceeded maximum\n"
+#define ERROR_STR_04 "philosophers: main: number of philosophers must be a positive integer\n"
+#define ERROR_STR_05 "philosophers: main: parameters must be a positive integer\n"
+
+
+
 // TS: Time Stamp
 //      F: Fork, M: Meal, S: Sleep T: Think
 //enum {TSF,     TSM,     TSS,     TST};
@@ -104,9 +115,10 @@ void init_philo(t_prompt *prompt, t_philo *philo, pthread_mutex_t *forks);
 void build_table(t_prompt *prompt, t_philo *philos);
 
 // Error handling
-void exit_on_error(t_prompt *prompt, char *s);
-void cleanup(t_prompt *prompt);
-void free_table(t_philo **head);
+void exit_on_error(char *s, int exit_mode);
+void check_input_params(t_params *params);
+int is_valid_input_args(char **argv);
+int is_number(char *s);
 
 // Utils libft
 size_t	ft_strlen(const char *str);
