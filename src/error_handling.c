@@ -22,7 +22,7 @@ int is_valid_input_args(char **argv)
 {
     int i;
 
-    i = 0;
+    i = 1;
     while (argv[i] != NULL)
     {
         if (!is_number(argv[i]))
