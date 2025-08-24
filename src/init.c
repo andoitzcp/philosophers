@@ -6,12 +6,11 @@
 /*   By: acampo-p@student.42urduliz.com <marvi      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 14:05:10 by acampo-p@         #+#    #+#             */
-/*   Updated: 2025/08/24 14:06:07 by acampo-p@        ###   ########.fr       */
+/*   Updated: 2025/08/24 15:41:07 by acampo-p@        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
 
 void	set_params(t_params *params, int argc, char **argv)
 {
@@ -35,7 +34,7 @@ void	init_philo(t_prompt *prompt, t_philo *philo, pthread_mutex_t *forks)
 	philo->nbr = i + 1;
 	philo->lfm = &forks[i % nop];
 	philo->rfm = &forks[(i + 1) % nop];
-	pthread_mutex_init(&(prompt->death_mutex), NULL);
+	pthread_mutex_init(&(philo->mcm), NULL);
 	philo->lpn = NULL;
 	philo->rpn = NULL;
 	init_tstamp(&(philo->tsf));
