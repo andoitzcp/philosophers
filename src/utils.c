@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acampo-p@student.42urduliz.com <marvi      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/24 14:08:20 by acampo-p@         #+#    #+#             */
+/*   Updated: 2025/08/24 14:13:22 by acampo-p@        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 size_t	ft_strlen(const char *str)
@@ -26,28 +38,9 @@ void	ft_putstr_fd(char *s, int fd)
 
 int	ft_abs(int i)
 {
-    if (i < 0)
-        return (-1 * i);
-    return i;
-}
-
-void	*ft_memcpy(void *dst, const void *src, size_t n)
-{
-	char	*cdst;
-	char	*csrc;
-	size_t	index;
-
-	if (!dst && !src)
-		return (dst);
-	cdst = (char *)dst;
-	csrc = (char *)src;
-	index = 0;
-	while (index < n)
-	{
-		cdst[index] = csrc[index];
-		index++;
-	}
-	return (dst);
+	if (i < 0)
+		return (-1 * i);
+	return (i);
 }
 
 int	ft_atoi(const char *nptr)

@@ -1,32 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debugging.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acampo-p@student.42urduliz.com <marvi      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/24 14:04:04 by acampo-p@         #+#    #+#             */
+/*   Updated: 2025/08/24 14:55:14 by acampo-p@        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void ft_printphilosopher(t_philo *p)
+void	ft_printphilosopher(t_philo *p)
 {
-    printf("Philo #%d: %p\n", p->nbr, p);
-    printf("\tright philo: %p\n", p->rpn);
-    printf("\tleft  philo: %p\n", p->lpn);
-    printf("\tright fork: %p\n", p->rfm);
-    printf("\tleft  fork: %p\n\n", p->lfm);
+	printf("Philo #%d: %p\n", p->nbr, p);
+	printf("\tright philo: %p\n", p->rpn);
+	printf("\tleft  philo: %p\n", p->lpn);
+	printf("\tright fork: %p\n", p->rfm);
+	printf("\tleft  fork: %p\n\n", p->lfm);
 }
 
-void ft_printtable(t_philo **head)
+void	ft_printtable(t_philo **head)
 {
-    t_philo *p;
+	t_philo	*p;
 
-    p = *head;
-    while (p->rpn != *head)
-    {
-        ft_printphilosopher(p);
-        p = p->rpn;
-    }
-    ft_printphilosopher(p);
+	p = *head;
+	while (p->rpn != *head)
+	{
+		ft_printphilosopher(p);
+		p = p->rpn;
+	}
+	ft_printphilosopher(p);
 }
 
-void ft_printparams(t_params *params)
+void	ft_printparams(t_params *params)
 {
-    printf("Number of philosophers: %d\n", params->nop);
-    printf("Time to die: %d\n", params->ttd);
-    printf("Time to eat: %d\n", params->tte);
-    printf("Time to sleep: %d\n", params->tts);
-    printf("Number must eat: %d\n", params->nme);
+	printf("Number of philosophers: %d\n", params->nop);
+	printf("Time to die: %d\n", params->ttd);
+	printf("Time to eat: %d\n", params->tte);
+	printf("Time to sleep: %d\n", params->tts);
+	printf("Number must eat: %d\n", params->nme);
 }

@@ -1,104 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   control.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acampo-p@student.42urduliz.com <marvi      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/24 14:00:16 by acampo-p@         #+#    #+#             */
+/*   Updated: 2025/08/24 14:24:10 by acampo-p@        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void set_death_flag(t_prompt *prompt, int val)
+void	*control(void *p)
 {
-    pthread_mutex_lock(&(prompt->death_mutex));
-    prompt->someone_has_died = val;
-    pthread_mutex_unlock(&(prompt->death_mutex));
-}
+	t_prompt	*prompt;
+	t_philo		**head;
+	t_philo		*philo;
 
-int get_death_flag(t_prompt *prompt)
-{
-    int death_flag;
-
-    pthread_mutex_lock(&(prompt->death_mutex));
-    death_flag = prompt->someone_has_died;
-    pthread_mutex_unlock(&(prompt->death_mutex));
-    return (death_flag);
-}
-
-int is_alive_philo(t_philo *philo)
-{
-    unsigned long death_time;
-    unsigned long current_time;
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL);
-    if (get_tstamp_usecs(&(philo->tsm)) == 0)
-        return (1);
-    death_time = get_tstamp_usecs(&(philo->tsm)) + philo->prompt->params->ttd;
-    current_time = tv.tv_sec * 1000000 + tv.tv_usec;
-    if (death_time < current_time)
-        return (0);
-    else
-        return (1);
-}
-
-int is_philo_finished_eating(t_prompt *prompt, t_philo *philo)
-{
-    int target;
-
-    target = prompt->params->nme;
-    if (target == -1)
-        return (0);
-    pthread_mutex_lock(&(philo->mcm));
-    if (philo->count_m < target)
-    {
-        pthread_mutex_unlock(&(philo->mcm));
-        return (0);
-    }
-    else
-    {
-        pthread_mutex_unlock(&(philo->mcm));
-        return (1);
-    }
-}
-
-int all_have_eaten(t_prompt *prompt)
-{
-    t_philo *p;
-
-    p = *(prompt->table);
-    while (p->rpn != *(prompt->table))
-    {
-        if (is_philo_finished_eating(prompt, p) == 0)
-            return (0);
-        p = p->rpn;
-    }
-    if (is_philo_finished_eating(prompt, p) == 0)
-        return (0);
-    return (1);
-}
-
-void *control(void *p)
-{
-    t_prompt *prompt;
-    t_philo **head;
-    t_philo *philo;
-
-    prompt = (t_prompt *)p;
-    head = prompt->table;
-    philo = *head;
-    while (philo->rpn)
-    {
-        if (all_have_eaten(prompt))
-            break ;
-        //printf("flag100: %d, %d\n", is_alive_philo(philo), is_philo_finished_eating(prompt, philo));
-        if (is_alive_philo(philo) == 0 && !is_philo_finished_eating(prompt, philo))
-        {
-            update_tstamp(&(philo->tsd));
-            Announce(philo, ANNOUNCE_DEATH, &(philo->tsd));
-            set_death_flag(prompt, 1);
-            break ;
-        }
-        if (philo == *head)
-            usleep(50);
-        philo = philo->rpn;
-    }
-    /* while (philo->rpn != *head) */
-    /* { */
-    /*     pthread_detach(philo->thr); */
-    /*     philo = philo->rpn; */
-    /* } */
-    return(p);
+	prompt = (t_prompt *)p;
+	head = prompt->table;
+	philo = *head;
+	while (philo->rpn)
+	{
+		if (all_have_eaten(prompt))
+			break ;
+		if (!is_alive_philo(philo) && !is_philo_finished_eating(prompt, philo))
+		{
+			update_tstamp(&(philo->tsd));
+			announce(philo, ANNOUNCE_DEATH, &(philo->tsd));
+			set_death_flag(prompt, 1);
+			break ;
+		}
+		if (philo == *head)
+			usleep(50);
+		philo = philo->rpn;
+	}
+	return (p);
 }

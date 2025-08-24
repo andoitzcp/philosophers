@@ -22,7 +22,7 @@ WHITE = \033[0;97m
 
 #Sources
 
-SRC_FILES	= main init error_handling utils routine control debugging
+SRC_FILES	= main init error_handling utils utils2 routine control state action debugging
 
 SRC 		= 	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ 		= 	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
@@ -53,7 +53,7 @@ fclean:		clean
 			@echo "$(CYAN)$(NAME) executable files succesfully cleaned!$(DEF_COLOR)"
 
 re:			fclean all
-			@echo "$(GREEN)Everything was cleaned and the rebuilt for pipex!$(DEF_COLOR)"
+			@echo "$(GREEN)Everything was cleaned and the rebuilt for philosopers!$(DEF_COLOR)"
 
 norm:
 			@norminette $(SRC) $(INCLUDE) $(LIBFT) $(FT_PRINTF) | grep -v Norme -B1 || true
